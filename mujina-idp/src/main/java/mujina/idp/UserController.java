@@ -15,28 +15,29 @@ import java.util.Map;
 @Controller
 public class UserController {
 
-  private List<Map<String, String>> samlAttributes;
+    private List<Map<String, String>> samlAttributes;
 
-  @Autowired
-  @SuppressWarnings("unchecked")
-  public UserController(ObjectMapper objectMapper) throws IOException {
-    this.samlAttributes = objectMapper.readValue(new ClassPathResource("saml-attributes.json").getInputStream(), List.class);
-  }
+    @Autowired
+    @SuppressWarnings("unchecked")
+    public UserController(ObjectMapper objectMapper) throws IOException {
+        this.samlAttributes = objectMapper.readValue(new ClassPathResource("saml-attributes.json").getInputStream(),
+                List.class);
+    }
 
-  @GetMapping("/")
-  public String index(Authentication authentication) {
-    return authentication == null ? "index" : "redirect:/user.html";
-  }
+    @GetMapping("/")
+    public String index(Authentication authentication) {
+        return authentication == null ? "index" : "redirect:/user.html";
+    }
 
-  @GetMapping("/user.html")
-  public String user(Authentication authentication, ModelMap modelMap) {
-    modelMap.addAttribute("user", authentication);
-    return "user";
-  }
+    @GetMapping("/user.html")
+    public String user(Authentication authentication, ModelMap modelMap) {
+        modelMap.addAttribute("user", authentication);
+        return "user";
+    }
 
-  @GetMapping("/login")
-  public String login(ModelMap modelMap) {
-    modelMap.addAttribute("samlAttributes", samlAttributes);
-    return "login";
-  }
+    @GetMapping("/login")
+    public String login(ModelMap modelMap) {
+        modelMap.addAttribute("samlAttributes", samlAttributes);
+        return "login";
+    }
 }
