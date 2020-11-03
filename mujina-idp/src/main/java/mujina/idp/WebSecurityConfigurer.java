@@ -118,17 +118,26 @@ public class WebSecurityConfigurer implements WebMvcConfigurer {
             return filter;
         }
 
+        
+        /**
+         * Authorization 授权
+         */
         @Override
         protected void configure(HttpSecurity http) throws Exception {
-            http.csrf().disable().addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+            http.csrf().disable()
+                    .addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                     .addFilterBefore(new ForceAuthnFilter(samlMessageHandler), SAMLAttributeAuthenticationFilter.class)
                     .authorizeRequests()
                     .antMatchers("/", "/metadata", "/favicon.ico", "/api/**", "/*.css", "/*.js").permitAll()
-                    .antMatchers("/admin/**").hasRole("ADMIN").anyRequest().hasRole("USER").and()
-                    .formLogin().loginPage("/login").permitAll().failureUrl("/login?error=true").permitAll().and()
-                    .logout().logoutSuccessUrl("/");
+                    .antMatchers("/admin/**").hasRole("ADMIN").anyRequest().hasRole("USER")
+                    .and().formLogin().loginPage("/login").permitAll()
+                    .failureUrl("/login?error=true").permitAll()
+                    .and().logout().logoutSuccessUrl("/");
         }
 
+        /**
+         * Authentication 鉴权
+         */
         @Override
         public void configure(AuthenticationManagerBuilder auth) {
             auth.authenticationProvider(new AuthenticationProvider(idpConfiguration));
