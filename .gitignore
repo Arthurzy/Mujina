@@ -8,3 +8,4 @@ target/
 .settings
 application.t03.yml
 */.gitignore
+bin/*
